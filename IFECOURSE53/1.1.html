@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（一）</title>
+    <style>
+      #table-wrapper {
+        margin: 15px 0;
+      }
+      #region-select, #product-select {
+        width: 100px;
+        height: 30px;
+        border-radius: 4px;
+      }
+      #table {
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+      }
+      #table tr {
+        line-height: 2em;
+        text-align: center;
+      }
+      #table tr:nth-child(2n) {
+        background-color: #dedede;
+      }
+      .f-l {
+        float: left;
+      }
+      .m-r-5 {
+        margin-right: 5px;
+      }
+      #form:after {
+        content:"";
+        display:block;
+        clear:both; 
+      }
+    </style>
+  </head>
+  <body>
+    <h1>稍微复杂一些</h1>
+    <ul>
+      <li>我们现在加入第二个表单，商品种类，依然是select或者radio，自选。</li>
+      <li>两个表单项都存在，做并集的选择，比如选了华北，和手机，表示要看华北地区手机的销售情况</li>
+      <li>两个表单项的选择互相不干扰，即改变其中一个时候，不会导致另外一个的选项的变化</li>
+    </ul>
+    <div id="form">
+      <div class="f-l m-r-5" id="form-region">
+        <p>地区：</p>
+        <select class="select-change" id="region-select">
+          <option value=""></option>
+          <option>华北</option>
+          <option>华南</option>
+          <option>华东</option>
+        </select>
+      </div>
+      <div class="f-l" id="form-product">
+        <p>商品种类：</p>
+        <select class="select-change" id="product-select">
+          <option value=""></option>
+          <option>手机</option>
+          <option>笔记本</option>
+          <option>智能音箱</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="table-wrapper">
+    </div>
+    <script type="text/javascript">
+      let sourceData = [
+        {
+            product: "手机",
+            region: "华东",
+            sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+        },
+        {
+            product: "手机",
+            region: "华北",
+            sale: [80, 70, 90, 110, 130, 145, 150, 160, 170, 185, 190, 200]
+        },
+        {
+            product: "手机",
+            region: "华南",
+            sale: [220, 200, 240, 250, 260, 270, 280, 295, 310, 335, 355, 380]
+        },
+        {
+            product: "笔记本",
+            region: "华东",
+            sale: [50, 60, 80, 110, 30, 20, 70, 30, 420, 30, 20, 20]
+        },
+        {
+            product: "笔记本",
+            region: "华北",
+            sale: [30, 35, 50, 70, 20, 15, 30, 50, 710, 130, 20, 20]
+        },
+        {
+            product: "笔记本",
+            region: "华南",
+            sale: [80, 120, 130, 140, 70, 75, 120, 90, 550, 120, 110, 100]
+        },
+        {
+            product: "智能音箱",
+            region: "华东",
+            sale: [10, 30, 4, 5, 6, 5, 4, 5, 6, 5, 5, 25]
+        },
+        {
+            product: "智能音箱",
+            region: "华北",
+            sale: [15, 50, 15, 15, 12, 11, 11, 12, 12, 14, 12, 40]
+        },
+        {
+            product: "智能音箱",
+            region: "华南",
+            sale: [10, 40, 10, 6, 5, 6, 8, 6, 6, 6, 7, 26]
+        }
+      ];
+
+      let th = ['product', 'region'];
+
+      window.onload = function() {
+        drawTable();
+      }
+      
+      document.getElementById('region-select').addEventListener('change', selectChange);
+      document.getElementById('product-select').addEventListener('change', selectChange);
+
+      //  region-select的change事件
+      function selectChange() {
+        // 渲染新的表格()
+        drawTable();
+      }
+
+      function drawTable() {
+        // 根据表单选项获取数据
+        var data = filterData();
+        // 渲染表格
+        var tableDom = document.getElementById('table-wrapper')
+        tableDom.innerHTML = '<table border="1" id="table"><tr><th>PRODUCT</th><th>REGION</th></tr></table>'
+        var table = document.getElementById('table');
+        for(let i in data) {
+          var tr = document.createElement('tr');
+          for(let n in th) {
+            var td = document.createElement('td');
+            td.innerHTML = data[i][th[n]];
+            tr.appendChild(td)
+          }
+          table.appendChild(tr)
+        }
+      }
+
+      function filterData() {
+        var region = document.getElementById('region-select').value;
+        var product = document.getElementById('product-select').value;
+        var data0 = [];
+        var data1 = [];
+        if(region || product) {
+          if(region) {
+            for(let i in sourceData) {
+              if(sourceData[i]['region'] == region) {
+                data0.push(sourceData[i]);
+              }
+            }
+          }
+          else {
+            data0 = sourceData;
+          }
+          if(product) {
+            for(let i in data0) {
+              if(data0[i]['product'] == product) {
+                data1.push(data0[i]);
+              }
+            }
+          }
+          else{
+            data1 = data0;
+          }
+          return data1;
+        } else {
+          return sourceData;
+        }
+      }
+    </script>
+  </body>
+</html>

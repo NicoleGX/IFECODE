@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（一）</title>
+    <link href="./assets/css/main.css" rel="stylesheet" type="text/css" /> 
+  </head>
+  <body>
+    <h1>多选的表格渲染</h1>
+    <ul>
+      <li>当商品选择了一个，地区选择了多个的时候，商品作为第一列，地区作为第二列，并且把商品这一列的单元格做一个合并，只保留一个商品名称</li>
+      <li>当地区选择了一个，商品选择了多个的时候，地区作为第一列，商品作为第二列，并且把地区这一列的单元格做一个合并，只保留一个地区名称</li>
+      <li>当商品和地区都选择了多于一个的情况下，以商品为第一列，地区为第二列，商品列对同样的商品单元格进行合并</li>
+      <li>当商品和地区都只选择一个的情况下，以商品为第一列，地区为第二列</li>
+    </ul>
+    <!--  checkbox form    -->
+    <form>
+      <div id="region-checkbox-wrapper"></div>
+      <div id="product-checkbox-wrapper"></div>
+    </form>
+    <!--  table   -->
+    <div id="table-wrapper">
+    </div>
+    <script type="text/javascript" charset="utf8" src="./assets/js/checkbox.js"></script>
+    <script type="text/javascript" charset="utf8" src="./assets/js/table.js"></script>
+    <script type="text/javascript" charset="utf8" src="./assets/js/app.js"></script>
+    <script type="text/javascript">
+      
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+#table-wrapper {
+  margin: 15px 0;
+}
+form input {
+  width: 18px;
+  height: 18px;
+  line-height: 2em;
+}
+form label {
+  position: relative;
+  top: -3px;
+  margin-right: 5px;
+}
+#table {
+  border-width: 1px;
+  border-color: #666666;
+  border-collapse: collapse;
+}
+#table tr {
+  line-height: 2em;
+  text-align: center;
+}
+#table tr:nth-child(2n) {
+  background-color: #dedede;
+}
+.f-l {
+  float: left;
+}
+.m-r-5 {
+  margin-right: 5px;
+}
+#form:after {
+  content:"";
+  display:block;
+  clear:both; 
+}

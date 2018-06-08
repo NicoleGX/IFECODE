@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（一）</title>
+        <style>
+      #table-wrapper {
+        margin: 15px 0;
+      }
+      form input {
+        width: 18px;
+        height: 18px;
+        line-height: 2em;
+      }
+      form label {
+        position: relative;
+        top: -3px;
+        margin-right: 5px;
+      }
+      #table {
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+      }
+      #table tr {
+        line-height: 2em;
+        text-align: center;
+      }
+      #table tr:nth-child(2n) {
+        background-color: #dedede;
+      }
+      .f-l {
+        float: left;
+      }
+      .m-r-5 {
+        margin-right: 5px;
+      }
+      #form:after {
+        content:"";
+        display:block;
+        clear:both; 
+      }
+    </style>
+  </head>
+  <body>
+    <h1>多选的表格渲染</h1>
+    <ul>
+      <li>当商品选择了一个，地区选择了多个的时候，商品作为第一列，地区作为第二列，并且把商品这一列的单元格做一个合并，只保留一个商品名称</li>
+      <li>当地区选择了一个，商品选择了多个的时候，地区作为第一列，商品作为第二列，并且把地区这一列的单元格做一个合并，只保留一个地区名称</li>
+      <li>当商品和地区都选择了多于一个的情况下，以商品为第一列，地区为第二列，商品列对同样的商品单元格进行合并</li>
+      <li>当商品和地区都只选择一个的情况下，以商品为第一列，地区为第二列</li>
+    </ul>
+    <form>
+      <div id="region-checkbox-wrapper"></div>
+      <div id="product-checkbox-wrapper"></div>
+    </form>
+
+    <div id="table-wrapper">
+    </div>
+    <script type="text/javascript">
+      let sourceData = [
+        {
+            product: "手机",
+            region: "华东",
+            sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+        },
+        {
+            product: "手机",
+            region: "华北",
+            sale: [80, 70, 90, 110, 130, 145, 150, 160, 170, 185, 190, 200]
+        },
+        {
+            product: "手机",
+            region: "华南",
+            sale: [220, 200, 240, 250, 260, 270, 280, 295, 310, 335, 355, 380]
+        },
+        {
+            product: "笔记本",
+            region: "华东",
+            sale: [50, 60, 80, 110, 30, 20, 70, 30, 420, 30, 20, 20]
+        },
+        {
+            product: "笔记本",
+            region: "华北",
+            sale: [30, 35, 50, 70, 20, 15, 30, 50, 710, 130, 20, 20]
+        },
+        {
+            product: "笔记本",
+            region: "华南",
+            sale: [80, 120, 130, 140, 70, 75, 120, 90, 550, 120, 110, 100]
+        },
+        {
+            product: "智能音箱",
+            region: "华东",
+            sale: [10, 30, 4, 5, 6, 5, 4, 5, 6, 5, 5, 25]
+        },
+        {
+            product: "智能音箱",
+            region: "华北",
+            sale: [15, 50, 15, 15, 12, 11, 11, 12, 12, 14, 12, 40]
+        },
+        {
+            product: "智能音箱",
+            region: "华南",
+            sale: [10, 40, 10, 6, 5, 6, 8, 6, 6, 6, 7, 26]
+        }
+      ];
+
+      // let th = ['product', 'region'];
+
+      function createCheckBox(boxId, data) {
+        // 全选checkbox
+        var checkboxAll = '<input type="checkbox" id="all-'+ boxId +'" name="items" value="全选" checkbox-type="all" /><label for="all-'  + boxId + '">全选</label>';
+        var box = '';
+        for(i in data) {
+          box += '<input type="checkbox" id="'+ data[i]['value'] +'" name="items" value="'+ data[i]['text'] +'" checkbox-type="single" /><label for="'+ data[i]['value'] +'">'+ data[i]['text'] +'</label>'
+        }
+        switch(boxId)
+        {
+          case 'region-checkbox-wrapper':
+            document.getElementById(boxId).innerHTML = '<p>地区：</p>' + box + checkboxAll
+            break;
+          case 'product-checkbox-wrapper':
+            document.getElementById(boxId).innerHTML = '<p>商品种类：</p>' + box + checkboxAll
+            break;
+        }
+
+        // 添加事件
+        document.getElementById(boxId).addEventListener('click', function() {
+          if(event.target.type === 'checkbox') {
+
+            var input = document.getElementById(event.target.parentNode.id).getElementsByTagName("input");
+
+            if(event.target.getAttribute('checkbox-type') === 'all') {
+              // 全选
+              for(let i in input) {
+                if(input[i].type === 'checkbox') {
+                  input[i].checked = 'checked';
+                }
+              }
+            } else {
+              // 子选项
+              var count = 0
+              for(let i = 0; i < input.length - 1; i++) {
+                if(input[i].type === 'checkbox' && input[i].checked) {
+                  count++;
+                }
+              }
+              // 单选个数
+              var singleCount = input.length - 1;
+              if(!count) {
+                // 唯一被勾选
+                event.target.checked = 'checked';
+              }
+              else if(count < singleCount && input[singleCount].checked) {
+                input[singleCount].checked = false
+              }
+              else if(count === singleCount) {
+                input[singleCount].checked = 'checked';
+              }
+            }
+          }
+        })
+      }
+
+      createCheckBox('region-checkbox-wrapper', [
+        {
+          value: 'huabei',
+          text: '华北'
+        },
+        {
+          value: 'huanan',
+          text: '华南'
+        },
+        {
+          value: 'huadong',
+          text: '华东'
+        }
+      ])
+      createCheckBox('product-checkbox-wrapper', [
+        {
+          value: 'phone',
+          text: '手机'
+        },
+        {
+          value: 'pc',
+          text: '笔记本'
+        },
+        {
+          value: 'audio',
+          text: '智能音箱'
+        }
+      ])
+
+      window.onload = function() {
+        document.getElementById('all-region-checkbox-wrapper').click();
+        document.getElementById('all-product-checkbox-wrapper').click();
+      }
+      
+      document.getElementById('region-checkbox-wrapper').addEventListener('click', selectChange);
+      document.getElementById('product-checkbox-wrapper').addEventListener('click', selectChange);
+
+      //  region-select的change事件
+      function selectChange() {
+        // 渲染新的表格()
+        drawTable();
+      }
+
+      function drawTable() {
+        // 根据表单选项获取数据
+        var data = filterData();
+        if(data.length) {
+          var typeArr = new Array();
+          // 判断渲染类型, [[line1, line2], merge, {mergeCount}]
+          typeArr = drawType(data);
+          // 渲染表格
+          var tableDom = document.getElementById('table-wrapper')
+          tableDom.innerHTML = '<table border="1" id="table"><tr><th>' + typeArr[0][0].toUpperCase() + '</th><th>' + typeArr[0][1].toUpperCase() + '</th></tr></table>'
+          var table = document.getElementById('table');
+          if(typeArr[1]) {
+            for(let key in typeArr[2]) {
+              var count = 1
+              for(let n in data) {
+                if(data[n][typeArr[1]] === key) {
+                  var tr = document.createElement('tr');
+                  if(count === 1) {
+                    tr.innerHTML = '<td rowspan=' + typeArr[2][key] + '>' + key + '</td><td>' + data[n][typeArr[0][1]] + '</td>';
+                  } else {
+                    tr.innerHTML = '<td>' + data[n][typeArr[0][1]] + '</td>';
+                  }
+                  table.appendChild(tr);
+                  count += 1;
+                } 
+              }
+            }
+          } else {
+            for(let i in data) {
+              var tr = document.createElement('tr');
+              for(let n in typeArr[0]) {
+                var td = document.createElement('td');
+                td.innerHTML = data[i][typeArr[0][n]];
+                tr.appendChild(td)
+              }
+              table.appendChild(tr)
+            }
+          }
+        }
+      }
+      
+      function drawType(data) {
+        var region = [];
+        var product = [];
+        for(let i in data) {
+          if(!contains(region, data[i]['region'])) {
+            region.push(data[i]['region'])
+          }
+          if(!contains(product, data[i]['product'])) {
+            product.push(data[i]['product'])
+          }
+        }
+        if(region.length == 1) {
+          if(product.length == 1) {
+            return [['product', 'region'], ''];
+          } else {
+            var res = {}
+            for(let i in data) {
+              if(!res.hasOwnProperty(data[i]['region'])) {
+                res[data[i]['region']] = 0
+              }
+              res[data[i]['region']] += 1
+            }
+            return [['region', 'product'], 'region', res];
+          }
+        } else if(region.length > 1) {
+          var res = {}
+          for(let i in data) {
+            if(!res.hasOwnProperty(data[i]['product'])) {
+              res[data[i]['product']] = 0
+            }
+            res[data[i]['product']] += 1
+          }
+          return [['product', 'region'], 'product', res];
+        }
+      }
+
+      function filterData() {
+
+        var region = getCheckedVal('region-checkbox-wrapper');
+        var product = getCheckedVal('product-checkbox-wrapper');
+        var data = []
+        for(let i in sourceData) {
+          if(contains(region, sourceData[i]['region']) && contains(product, sourceData[i]['product'])) {
+            data.push(sourceData[i]);
+          }
+        }
+        return data;
+
+      }
+
+      // 勾选的元素
+      function getCheckedVal(id) {
+        var input = document.getElementById(id).getElementsByTagName('input')
+        var data = []
+        for(let i = 0; i < input.length-1; i++) {
+          if(input[i].checked) {
+            data.push(input[i].value)
+          }
+        }
+        return data;
+      }
+      
+      // 元素是否在数组内
+      function contains(arr, obj) {
+        var i = arr.length;
+        while (i--) {
+          if (arr[i] === obj) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      // function sortIndex(arr, index) {
+      //   arr.sort(function(x, y){
+      //     return x[index].localeCompare(y[index]);
+      //   });
+      // }
+    </script>
+  </body>
+</html>

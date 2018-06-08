@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（二）</title>
+  </head>
+<body>
+  function 绘制一个柱状图(柱状图数据) {
+    定义好柱状图绘制区域的高度，宽度，轴的高度，宽度
+    定义好每一个柱子的宽度及柱子的间隔宽度
+    定义好柱子颜色，轴的颜色
+
+    拿到柱状图中的最大值Max
+    根据Max和你用来绘制柱状图图像区域的高度，进行一个数据和像素的折算比例
+
+    绘制横轴及纵轴
+    遍历数据 {
+        计算将要绘制柱子的高度和位置
+        绘制每一个柱子
+    }    
+}
+  <div id="container" style="width: 1200px;height: 500px;border: 1px solid #333;border-radius: 4px;"></div>
+  <script type="text/javascript" charset="utf8" src="./assets/js/bar.js"></script>
+  <script type="text/javascript">
+    var data = {
+      product: "手机",
+      region: "华东",
+      sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+    };
+    drawBar(data['sale']);
+  </script>
+</body>
+</html>
