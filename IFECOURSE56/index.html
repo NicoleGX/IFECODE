@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（一）</title>
+<!--     <link href="./assets/css/main.css" rel="stylesheet" type="text/css" />  -->
+    <style type="text/css">
+      #table-wrapper {
+        margin: 15px 0;
+      }
+      #checkbox-form input {
+        width: 18px;
+        height: 18px;
+        line-height: 2em;
+      }
+      #table-wrapper input {
+        line-height: 1.5em;
+        width: 100px;
+        border: none;
+        color: #000;
+        background-color:rgba(0,0,0,0);
+        text-align: center;
+      }
+      form label {
+        position: relative;
+        top: -3px;
+        margin-right: 5px;
+      }
+      #table {
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+      }
+      #table tr {
+        line-height: 2em;
+        text-align: center;
+      }
+      #table tr:nth-child(2n) {
+        background-color: #dedede;
+      }
+      .f-l {
+        float: left;
+      }
+      .m-r-5 {
+        margin-right: 5px;
+      }
+      #form:after {
+        content:"";
+        display:block;
+        clear:both; 
+      }
+      button {
+        border-radius: 4px;
+        padding: 10px;
+        border: 1px solid #000;
+        width: 80px;
+        background-color: rgba(0,0,0,0);
+        margin: 5px;
+      }
+      #container_line {
+        width: 810px;
+        height: 410px;
+        border: 1px solid #333;
+        border-radius: 4px;
+      }
+      #container_bar {
+        width: 810px;
+        height: 410px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--  checkbox form    -->
+    <form id="checkbox-form">
+      <div id="region-checkbox-wrapper"></div>
+      <div id="product-checkbox-wrapper"></div>
+    </form>
+    <!--  table   -->
+    <form id="table-form">
+      <div id="table-wrapper"></div>
+      <button type="button" onclick="saveTable()">save</button>
+    </form>
+    <!--  line graph -->
+    <div id="container_line"></div>
+    <!-- bar graph -->
+    <!-- <div id="container_bar"></div> -->
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <script type="text/javascript">
+
+      var regionId = 'region-checkbox-wrapper';
+      var productId = 'product-checkbox-wrapper';
+      // the data of bar
+      var data_bar = {
+        product: "手机",
+        region: "华东",
+        sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+      };
+      var sourceData = [
+          {
+              product: "手机",
+              region: "华东",
+              sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+          },
+          {
+              product: "手机",
+              region: "华北",
+              sale: [80, 70, 90, 110, 130, 145, 150, 160, 170, 185, 190, 200]
+          },
+          {
+              product: "手机",
+              region: "华南",
+              sale: [220, 200, 240, 250, 260, 270, 280, 295, 310, 335, 355, 380]
+          },
+          {
+              product: "笔记本",
+              region: "华东",
+              sale: [50, 60, 80, 110, 30, 20, 70, 30, 420, 30, 20, 20]
+          },
+          {
+              product: "笔记本",
+              region: "华北",
+              sale: [30, 35, 50, 70, 20, 15, 30, 50, 710, 130, 20, 20]
+          },
+          {
+              product: "笔记本",
+              region: "华南",
+              sale: [80, 120, 130, 140, 70, 75, 120, 90, 550, 120, 110, 100]
+          },
+          {
+              product: "智能音箱",
+              region: "华东",
+              sale: [10, 30, 4, 5, 6, 5, 4, 5, 6, 5, 5, 25]
+          },
+          {
+              product: "智能音箱",
+              region: "华北",
+              sale: [15, 50, 15, 15, 12, 11, 11, 12, 12, 14, 12, 40]
+          },
+          {
+              product: "智能音箱",
+              region: "华南",
+              sale: [10, 40, 10, 6, 5, 6, 8, 6, 6, 6, 7, 26]
+          }
+      ];
+      var getCheckedVal = function (id) {
+        var input = document.getElementById(id).getElementsByTagName('input')
+        var data = []
+        for(let i = 0; i < input.length-1; i++) {
+          if(input[i].checked) {
+            data.push(input[i].value)
+          }
+        }
+        return data;
+      }
+      // the obj (not) in arr
+      var contains = function (arr, obj) {
+        var i = arr.length;
+        while (i--) {
+          if (arr[i] === obj) {
+            return true;
+          }
+        }
+        return false;
+      }
+    </script>
+    <!-- <script type="text/javascript" charset="utf8" src="./assets/js/bar.js"></script> -->
+    <script type="text/javascript" charset="utf8" src="./assets/js/line.js"></script>
+    <script type="text/javascript" charset="utf8" src="./assets/js/checkbox.js"></script>
+    <script type="text/javascript" charset="utf8" src="./assets/js/table.js"></script>
+    <script type="text/javascript" charset="utf8" src="./assets/js/app.js"></script>
+    <script>
+      // Checkout of input
+      var isNum = function () {
+        var reg=/^[1-9]\d*$|^0$/;
+        if(!reg.test(event.target.value)) {
+          alert('请输入正确的数字！');
+          localStorage.setItem('numCheck', false);
+        } else {
+          localStorage.setItem('numCheck', true);
+        }
+      }
+      var saveTable = function () {
+      if(localStorage.numCheck === 'true') {
+        var editData = []
+        var trNode = document.getElementsByClassName('trEvent');
+        for(let i = 0; i < trNode.length; i++) {
+          var tdCount = trNode[i].children.length;
+          var tdNode = trNode[i].children;
+          var label = tdNode[2].getAttribute('label');
+          var inputVal = [];
+          for(let n = 0; n < tdCount; n++) {
+            if(tdNode[n].children.length && tdNode[n].children[0].nodeName === 'INPUT') {
+              inputVal.push(parseInt(tdNode[n].children[0].value));
+            }
+          }
+          editData.push(label + ',sale:' + inputVal.join('-'));
+          // update sourceData
+          var labelArr = label.split(',');
+          var tem = {};
+          for(let n in labelArr) {
+            var key_val = labelArr[n].split(':');
+            tem[key_val[0]] = key_val[1];
+          }
+          for(let m in sourceData) {
+            if(sourceData[m]['region'] === tem['region'] && sourceData[m]['product'] === tem['product']) {
+                sourceData[m]['sale'] = inputVal;
+            }
+          }
+        }
+        // 存储
+        localStorage.setItem('tableData', editData.join('&'));
+    
+        App.drawTableandLine();
+      }
+    }
+    </script>
+  </body>
+</html>
